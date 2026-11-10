@@ -1,0 +1,6 @@
+{
+  "name": "TikTok LIVE Studio & Cloudphone Injector",
+  "description": "מערכת שידור לייב מתקדמת לטיקטוק: מנוע אפקטים ואגרופים בזמן אמת, הזרקת מצלמה וירטואלית ושליטה ב-Cloudphone",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
