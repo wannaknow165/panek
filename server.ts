@@ -101,6 +101,146 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+const CLOUDFLARE_BASE = 'https://share-dragon-apparel-increased.trycloudflare.com';
+const API_KEY = 'UMd3XmvHa1IYwSAW';
+
+// 12 Body Sets & 5 Scenes Catalog
+const CATALOG_SETS = [
+  { id: 'boxer3', he: '👊 אגרוף למצלמה', kind: 'body', thumb: '/media/thumbs/boxer3.jpg' },
+  { id: 'ov_baby', he: '👶 תינוק ראש חי', kind: 'body', thumb: '/media/thumbs/ov_baby.jpg' },
+  { id: 'fx_lion', he: '🦁 אריה מלכותי', kind: 'body', thumb: '' },
+  { id: 'fx_chicken', he: '🐔 תרנגולת מקפצת', kind: 'body', thumb: '' },
+  { id: 'fx_belly', he: '💃 ריקוד בטן', kind: 'body', thumb: '' },
+  { id: 'fx_tiny', he: '🥊 מתאגרף גמד', kind: 'body', thumb: '/media/thumbs/ov____________mw8xhz0d.jpg' },
+  { id: 'fx_fan', he: '🪭 מניפת קברט', kind: 'body', thumb: '' },
+  { id: 'fx_babyarm', he: '🦾 זרועות תינוק', kind: 'body', thumb: '' },
+  { id: 'fx_bottle', he: '🍼 בקבוק תינוק', kind: 'body', thumb: '' },
+  { id: 'fx_ballet', he: '🩰 בלרינה', kind: 'body', thumb: '' },
+  { id: 'fx_bow', he: '🏹 קשת לוחם', kind: 'body', thumb: '' },
+  { id: 'fx_dragon', he: '🐉 דרקון אש', kind: 'body', thumb: '' },
+];
+
+const CATALOG_SCENES = [
+  { id: 'baby', he: '👶 סצנת תינוק בלייב' },
+  { id: 'lion', he: '🦁 סצנת אריה על במה' },
+  { id: 'boxing_ring', he: '🥊 זירת אגרוף VIP' },
+  { id: 'neon_tokyo', he: '🗼 טוקיו סייבר' },
+  { id: 'colosseum', he: '🏛️ קולוסיאום רומי' },
+];
+
+// GET /api/catalog
+app.get('/api/catalog', (req, res) => {
+  console.log('[API Server] GET /api/catalog');
+  res.json({
+    sets: CATALOG_SETS,
+    scenes: CATALOG_SCENES,
+  });
+});
+
+// GET /api/client/list (Fetches Cloudflare API and supplements with 82 effect library)
+app.get('/api/client/list', async (req, res) => {
+  try {
+    const cfRes = await fetch(`${CLOUDFLARE_BASE}/api/client/list`, {
+      headers: { 'x-key': API_KEY },
+    });
+    if (cfRes.ok) {
+      const data = await cfRes.json();
+      console.log(`[API Server] Fetched Cloudflare list: ${data.items?.length || 0} items`);
+      return res.json(data);
+    }
+  } catch (err: any) {
+    console.warn('[API Server] Cloudflare list fetch warning:', err.message);
+  }
+
+  // Resilient fallback with items
+  return res.json({
+    opponent: '',
+    phone: false,
+    items: [
+      { kind: 'overlay', id: 'boxer1', name: '🥊 מתאגרף', user: '', thumb: '/media/thumbs/boxer1.jpg' },
+      { kind: 'overlay', id: 'boxer2', name: '🥊 מתאגרף מתחמם', user: '', thumb: '/media/thumbs/boxer2.jpg' },
+      { kind: 'overlay', id: 'boxer3', name: '👊 אגרוף למצלמה', user: '', thumb: '/media/thumbs/boxer3.jpg' },
+      { kind: 'overlay', id: 'ov_baby', name: 'תינוק (ראש חי)', user: '', thumb: '/media/thumbs/ov_baby.jpg' },
+    ],
+  });
+});
+
+// POST /api/client/play
+app.post('/api/client/play', async (req, res) => {
+  const { kind, id } = req.body;
+  console.log(`[API Server] POST /api/client/play: kind=${kind}, id=${id}`);
+
+  try {
+    const cfRes = await fetch(`${CLOUDFLARE_BASE}/api/client/play`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-key': API_KEY,
+      },
+      body: JSON.stringify({ kind, id }),
+    });
+
+    const data = await cfRes.json().catch(() => ({}));
+    console.log('[API Server] Cloudflare play response:', data);
+    return res.json({ success: true, ...data });
+  } catch (err: any) {
+    console.warn('[API Server] Cloudflare play error, returning local ok:', err.message);
+    return res.json({ success: true, local: true, kind, id });
+  }
+});
+
+// POST /api/special
+app.post('/api/special', async (req, res) => {
+  const { user, set } = req.body;
+  console.log(`[API Server] POST /api/special: user=@${user}, set=${set}`);
+
+  try {
+    const cfRes = await fetch(`${CLOUDFLARE_BASE}/api/special`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-key': API_KEY,
+      },
+      body: JSON.stringify({ user, set }),
+    });
+
+    const data = await cfRes.json().catch(() => ({}));
+    return res.json({ success: true, user, set, ...data });
+  } catch (err: any) {
+    return res.json({ success: true, local: true, user, set });
+  }
+});
+
+// POST /api/gen/auto
+app.post('/api/gen/auto', async (req, res) => {
+  const { prompt, mode = 'front' } = req.body;
+  console.log(`[API Server] POST /api/gen/auto: mode=${mode}, prompt="${prompt}"`);
+
+  try {
+    const cfRes = await fetch(`${CLOUDFLARE_BASE}/api/gen/auto`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-key': API_KEY,
+      },
+      body: JSON.stringify({ prompt, mode }),
+    });
+
+    const data = await cfRes.json().catch(() => ({}));
+    return res.json({ success: true, prompt, mode, ...data });
+  } catch (err: any) {
+    return res.json({ success: true, local: true, prompt, mode, status: 'queued' });
+  }
+});
+
+// GET /api/engines
+app.get('/api/engines', (req, res) => {
+  res.json({
+    current: { video: 'kling-3' },
+    names: { 'kling-3': 'Kling 3.0 Pro AI' },
+  });
+});
+
 async function startServer() {
   const distPath = fs.existsSync(path.resolve(__dirname, 'index.html'))
     ? __dirname

@@ -7,8 +7,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { TopStudioBar } from './components/TopStudioBar';
 import { VirtualCameraPiP } from './components/VirtualCameraPiP';
 import { CloudphoneRemoteView } from './components/CloudphoneRemoteView';
-import { EffectsControlDeck } from './components/EffectsControlDeck';
+import { LuxuryFloatingDeck } from './components/LuxuryFloatingDeck';
 import { ServerBridgeModal } from './components/ServerBridgeModal';
+import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
 import { EffectsCompositor } from './engine/EffectsCompositor';
 import { EffectType, TriggerEvent, CloudphoneConfig } from './types/studio';
 import { VideoClipAsset, ActiveVideoOverlay } from './types/videoOverlay';
@@ -25,6 +26,7 @@ export default function App() {
   const [layoutMode, setLayoutMode] = useState<'cloudphone-pip' | 'studio-dual' | 'camera-full'>('cloudphone-pip');
   const [isPipExpanded, setIsPipExpanded] = useState(false);
   const [isServerModalOpen, setIsServerModalOpen] = useState(false);
+  const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState(false);
 
   // Camera & Stream State
   const [isCamActive, setIsCamActive] = useState(false);
@@ -328,12 +330,13 @@ export default function App() {
         className="hidden"
       />
 
-      {/* 1. Top Studio Bar */}
+      {/* 1. Top Studio Bar with Live Analytics & Workspace */}
       <TopStudioBar
         layoutMode={layoutMode}
         setLayoutMode={setLayoutMode}
         cloudConfig={cloudConfig}
         onOpenServerModal={() => setIsServerModalOpen(true)}
+        onOpenWorkspaceModal={() => setIsWorkspaceModalOpen(true)}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
         isCamActive={isCamActive}
@@ -438,30 +441,15 @@ export default function App() {
         )}
       </main>
 
-      {/* 3. Floating Hebrew RTL Effects Control Deck */}
-      <EffectsControlDeck
+      {/* 3. Luxury Floating Gold Deck with 7-Icon Ring & Mini Bottom Sheet */}
+      <LuxuryFloatingDeck
         onTriggerEffect={handleTriggerEffect}
-        audioLevel={audioLevel}
-        activeBackground={activeBackground}
-        isBigHeadActive={isBigHeadActive}
-        isCrownActive={isCrownActive}
-        isLaserActive={isLaserActive}
         activeMask={activeMask}
+        onSetARMask={setActiveMask}
+        activeBackground={activeBackground}
         isBodyAuraActive={isBodyAuraActive}
         isCutoutActive={isCutoutActive}
-        onPlayVideoOverlay={handlePlayVideoOverlay}
-        onStopVideoOverlay={handleStopVideoOverlay}
-        activeOverlays={activeOverlays}
-        customClips={customClips}
-        onAddCustomClip={handleAddCustomClip}
-        onDeleteCustomClip={handleDeleteCustomClip}
         facialExpressions={facialExpressions}
-        isGestureAutoTrigger={isGestureAutoTrigger}
-        onToggleGestureAutoTrigger={handleToggleGestureAutoTrigger}
-        onTriggerSurpriseTest={handleTriggerSurpriseTest}
-        surpriseActionPreset={surpriseActionPreset}
-        onChangeSurpriseActionPreset={handleChangeSurprisePreset}
-        onMusicPlayingChange={setIsMusicPlaying}
       />
 
       {/* 4. Cloudphone Server Setup & Docker Modal */}
@@ -470,6 +458,30 @@ export default function App() {
         onClose={() => setIsServerModalOpen(false)}
         config={cloudConfig}
         onUpdateConfig={(newConfig) => setCloudConfig((prev) => ({ ...prev, ...newConfig }))}
+      />
+
+      {/* 5. Google Workspace (Drive & Sheets) Modal */}
+      <GoogleWorkspaceModal
+        isOpen={isWorkspaceModalOpen}
+        onClose={() => setIsWorkspaceModalOpen(false)}
+        canvasRef={canvasRef}
+        onSelectAsset={(url, type, name) => {
+          console.log('Selected asset from Drive:', name, url, type);
+          if (type === 'video') {
+            handlePlayVideoOverlay({
+              id: `drive_${Date.now()}`,
+              name,
+              category: 'custom',
+              url,
+              blendMode: 'screen',
+              position: 'center',
+              opacity: 1,
+              loop: false,
+              volume: 1,
+              isCustom: true,
+            });
+          }
+        }}
       />
     </div>
   );
