@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {
   formatLiveDuration,
   formatCompactNumber,
-  simulateNextLiveMetrics,
 } from './liveAnalytics';
 
 test('formatLiveDuration formats minutes and seconds correctly', () => {
@@ -30,13 +29,4 @@ test('formatCompactNumber formats numbers into compact string', () => {
   assert.equal(formatCompactNumber(15400), '15.4K');
   assert.equal(formatCompactNumber(250000), '250K');
   assert.equal(formatCompactNumber(1500000), '1.5M');
-});
-
-test('simulateNextLiveMetrics advances duration and increments likes', () => {
-  const initial = { durationSeconds: 100, viewers: 1000, likes: 5000 };
-  const next = simulateNextLiveMetrics(initial);
-
-  assert.equal(next.durationSeconds, 101);
-  assert.ok(next.likes > initial.likes, 'Likes should increase');
-  assert.ok(next.viewers >= 120, 'Viewers should remain above minimum');
 });

@@ -392,9 +392,9 @@ adb connect localhost:5555
 
                 <div className="flex items-center justify-between pt-2 border-t border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                     <span className="text-xs text-slate-300">
-                      מצב סימולטור מקומי פעיל (אינטראקטיבי מלא בדפדפן)
+                      פרוקסי השרת מחובר ישירות לשרת ARIEL בענן
                     </span>
                   </div>
 

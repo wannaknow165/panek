@@ -38,23 +38,3 @@ export function formatCompactNumber(num: number): string {
   }
   return num.toString();
 }
-
-/**
- * Simulates organic viewer fluctuation and active incoming like bursts
- */
-export function simulateNextLiveMetrics(current: LiveMetrics): LiveMetrics {
-  // Viewers fluctuate realistically within +/- 15 around target
-  const viewerDelta = Math.floor((Math.random() - 0.48) * 8);
-  const nextViewers = Math.max(120, current.viewers + viewerDelta);
-
-  // Likes accumulate organically with bursty behavior
-  const likeIncrement = Math.floor(Math.random() * 25) + 5;
-  const nextLikes = current.likes + likeIncrement;
-
-  return {
-    durationSeconds: current.durationSeconds + 1,
-    viewers: nextViewers,
-    likes: nextLikes,
-    diamonds: (current.diamonds ?? 84) + (Math.random() > 0.85 ? 1 : 0),
-  };
-}

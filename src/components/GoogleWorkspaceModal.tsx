@@ -208,10 +208,10 @@ export const GoogleWorkspaceModal: React.FC<GoogleWorkspaceModalProps> = ({
     setErrorMessage(null);
     try {
       const metrics: LiveMetrics = currentLiveMetrics || {
-        durationSeconds: 1240,
-        viewers: 1420,
-        likes: 38450,
-        diamonds: 142,
+        durationSeconds: 0,
+        viewers: 0,
+        likes: 0,
+        diamonds: 0,
       };
 
       const title = `דוח שידור TikTok Live - ${new Date().toLocaleDateString('he-IL')}`;

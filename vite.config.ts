@@ -7,6 +7,7 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    envPrefix: ['VITE_', 'BOOSTERA_API_', 'BOOSTERA_CLIENT_', 'BOOSTERA_WS_'],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('.', import.meta.url)),

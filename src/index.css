@@ -39,6 +39,103 @@
   animation: float-heart 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
+@keyframes tiktok-combo-pop {
+  0% { transform: scale(1.45) rotate(-6deg); }
+  60% { transform: scale(0.94) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes tiktok-feed-enter {
+  0% { opacity: 0; transform: translateY(10px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-combo-pop {
+  animation: tiktok-combo-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-tiktok-row {
+  animation: tiktok-feed-enter 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes boostera-shake-sm {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-6px, 4px, 0) rotate(-1deg); }
+  40% { transform: translate3d(7px, -5px, 0) rotate(1deg); }
+  60% { transform: translate3d(-5px, -3px, 0) rotate(-0.8deg); }
+  80% { transform: translate3d(5px, 4px, 0) rotate(0.8deg); }
+}
+
+@keyframes boostera-punch {
+  0% { transform: scale(1); }
+  22% { transform: scale(1.36); }
+  65% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@keyframes boostera-snap {
+  0% { transform: scale(1); }
+  12% { transform: scale(1.48); }
+  85% { transform: scale(1.48); }
+  100% { transform: scale(1); }
+}
+
+@keyframes boostera-flash-strobe {
+  0% { opacity: 0.95; }
+  35% { opacity: 0.25; }
+  55% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
+@keyframes boostera-universe-orbit {
+  0% { transform: rotate(0deg) scale(0.92); opacity: 0.9; }
+  50% { transform: rotate(180deg) scale(1.06); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0.92); opacity: 0.9; }
+}
+
+@keyframes boostera-glitch-jitter {
+  0%, 100% { transform: translate3d(0, 0, 0); filter: hue-rotate(0deg) contrast(1.05); }
+  25% { transform: translate3d(-8px, 2px, 0); filter: hue-rotate(45deg) contrast(1.35); }
+  50% { transform: translate3d(8px, -3px, 0); filter: hue-rotate(-45deg) saturate(1.6); }
+  75% { transform: translate3d(-4px, 4px, 0); filter: hue-rotate(20deg) contrast(1.25); }
+}
+
+.boostera-shake-normal {
+  animation: boostera-shake-sm 0.36s infinite;
+}
+
+.boostera-shake-fast {
+  animation: shake-violent 0.24s infinite;
+}
+
+.boostera-punch-zoom {
+  animation: boostera-punch 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.boostera-snap-zoom {
+  animation: boostera-snap 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.boostera-flash-overlay {
+  animation: boostera-flash-strobe 0.48s ease-out forwards;
+}
+
+.boostera-universe-ring {
+  animation: boostera-universe-orbit 4.5s linear infinite;
+}
+
+.boostera-glitch-fx {
+  animation: boostera-glitch-jitter 0.22s steps(2, end) infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 4px;
